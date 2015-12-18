@@ -1,8 +1,7 @@
 package train.db
 import train.data._
 
-trait DatabaseInterface {
-  type DB[A]
+trait DatabaseInterface[DB[_]] {
   type DBQuery[A] <: DB[A]
   type DBWrite[A] <: DB[A]
 
@@ -16,4 +15,3 @@ trait DatabaseInterface {
   // returns submission id
   def addSubmission: StudentID => ProblemID => Code => DBWrite[Int]
 }
-
