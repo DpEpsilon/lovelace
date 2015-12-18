@@ -10,10 +10,10 @@ trait DatabaseInterface {
   def verifyStudent : StudentID => DBQuery[LoggedInStudent]
   def getProblemsForStudent : StudentID => DBQuery[Seq[Problem]]
   def getProblemSetsForStudent : StudentID => DBQuery[Seq[ProblemSet]]
-  def getSubmissionCode : StudentID => Problem => Int => DBQuery[Code]
-  def getSubmissionResult : StudentID => Problem => Int => DBQuery[SubmissionResult]
+  def getSubmissionCode : StudentID => ProblemID => Int => DBQuery[Code]
+  def getSubmissionResult : StudentID => ProblemID => Int => DBQuery[SubmissionResult]
 
   // returns submission id
-  def addSubmission: StudentID => Problem => Code => DBWrite[Int]
+  def addSubmission: StudentID => ProblemID => Code => DBWrite[Int]
 }
 
