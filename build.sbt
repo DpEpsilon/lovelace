@@ -5,6 +5,8 @@ lazy val root = (project in file("."))
     resolvers += DefaultMavenRepository,
     libraryDependencies ++= Seq(
       "org.http4s" %% "http4s-dsl"           % "0.11.2",
-      "org.http4s" %% "http4s-blaze-server"  % "0.11.2" 
+      "org.http4s" %% "http4s-blaze-server"  % "0.11.2", 
+      "org.scalaz" %% "scalaz-core"          % "7.1.2",
+      "org.scalaz" %% "scalaz-concurrent"    % "7.1.2"
     )
   )
