@@ -7,7 +7,7 @@ trait DatabaseInterface {
   type DBWrite[A] <: DB[A]
 
 
-  def verifyStudent : StudentID => DBQuery[LoggedInStudent]
+  def verifyStudent : StudentID => String => DBQuery[Option[LoggedInStudent]]
   def getProblemsForStudent : StudentID => DBQuery[Seq[Problem]]
   def getProblemSetsForStudent : StudentID => DBQuery[Seq[ProblemSet]]
   def getSubmissionCode : StudentID => ProblemID => Int => DBQuery[Code]
