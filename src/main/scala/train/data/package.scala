@@ -2,12 +2,9 @@ package train
 
 
 object data {
-  trait Student {
-    val id: Int
-  }
-
+  case class StudentID()
   case class Problem(val id: Int)
-  case class LoggedInStudent(val id: Int) extends Student
+  case class LoggedInStudent(val id: StudentID)
   case class Submission(val code: Code, val result: SubmissionResult)
   case class ProblemSet()
   case class Code()

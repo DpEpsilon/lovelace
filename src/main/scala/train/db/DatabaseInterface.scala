@@ -7,13 +7,13 @@ trait DatabaseInterface {
   type DBWrite[A] <: DB[A]
 
 
-  def verifyStudent : Int => DBQuery[LoggedInStudent]
-  def getProblemsForStudent : Student => DBQuery[Seq[Problem]]
-  def getProblemSetsForStudent : Student => DBQuery[Seq[ProblemSet]]
-  def getSubmissionCode : Student => Problem => Int => DBQuery[Code]
-  def getSubmissionResult : Student => Problem => Int => DBQuery[SubmissionResult]
+  def verifyStudent : StudentID => DBQuery[LoggedInStudent]
+  def getProblemsForStudent : StudentID => DBQuery[Seq[Problem]]
+  def getProblemSetsForStudent : StudentID => DBQuery[Seq[ProblemSet]]
+  def getSubmissionCode : StudentID => Problem => Int => DBQuery[Code]
+  def getSubmissionResult : StudentID => Problem => Int => DBQuery[SubmissionResult]
 
   // returns submission id
-  def addSubmission: Student => Problem => Code => DBWrite[Int]
+  def addSubmission: StudentID => Problem => Code => DBWrite[Int]
 }
 
