@@ -3,13 +3,13 @@ import org.http4s.server.HttpService
 import org.http4s.dsl._
 import org.slf4j.{Logger,LoggerFactory}
 
-object BlazeExample extends App {
+object LovelaceTrainingSite extends App {
   val service = HttpService {
     case req @ GET -> Root / "hello" => Ok("Hi!")
     case req => Ok("Hello world.")
   }
   BlazeBuilder.bindHttp(8080)
-    .mountService(service, "/http4s")
+    .mountService(service, "/")
     .run
     .awaitShutdown()
 }
