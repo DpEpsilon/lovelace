@@ -1,7 +1,9 @@
 package train.db
-import train.data._
 
+import scala.language.higherKinds
 import scalaz.concurrent.Task
+
+import train.data._
 
 trait DatabaseInterface[DB[_]] {
   type DBQuery[A] <: DB[A]
