@@ -14,8 +14,8 @@ trait DatabaseInterface[DB[_]] {
   def verifyStudent : (StudentID, String) => DBQuery[Option[LoggedInStudent]]
   def getProblemsForStudent : StudentID => DBQuery[Seq[Problem]]
   def getProblemSetsForStudent : StudentID => DBQuery[Seq[ProblemSet]]
-  def getSubmissionCode : (StudentID, ProblemID, Int) => DBQuery[Code]
-  def getSubmissionResult : (StudentID, ProblemID, Int) => DBQuery[SubmissionResult]
+  def getSubmissionCode : (StudentID, ProblemID, Int) => DBQuery[Option[Code]]
+  def getSubmissionResult : (StudentID, ProblemID, Int) => DBQuery[Option[SubmissionResult]]
 
   // returns submission id
   def addSubmission: (StudentID, ProblemID, Code) => DBWrite[Int]
