@@ -1,17 +1,19 @@
 package train.db
+
+import scala.language.higherKinds
+import scalaz.concurrent.Task
+
 import train.data._
 
-trait DatabaseInterface[DB[_]] {
-  type DBQuery[A] <: DB[A]
-  type DBWrite[A] <: DB[A]
+trait DatabaseInterface {
+  // verifyStudent(id, password) returns true iff the username/password pair is valid
+  def verifyStudent : (StudentID, String) => Task[Boolean]
 
-
-  def verifyStudent : StudentID => String => DBQuery[Option[LoggedInStudent]]
-  def getProblemsForStudent : StudentID => DBQuery[Seq[Problem]]
-  def getProblemSetsForStudent : StudentID => DBQuery[Seq[ProblemSet]]
-  def getSubmissionCode : StudentID => ProblemID => Int => DBQuery[Code]
-  def getSubmissionResult : StudentID => ProblemID => Int => DBQuery[SubmissionResult]
+  def getProblemsForStudent : StudentID => Task[Seq[Problem]]
+  def getProblemSetsForStudent : StudentID => Task[Seq[ProblemSet]]
+  def getSubmissionCode : (StudentID, ProblemID, Int) => Task[Option[Code]]
+  def getSubmissionResult : (StudentID, ProblemID, Int) => Task[Option[SubmissionResult]]
 
   // returns submission id
-  def addSubmission: StudentID => ProblemID => Code => DBWrite[Int]
+  def addSubmission: (StudentID, ProblemID, Code) => Task[Int]
 }
