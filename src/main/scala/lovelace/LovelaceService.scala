@@ -3,6 +3,7 @@ package lovelace
 import org.http4s.server.HttpService
 import org.http4s.dsl._
 import org.http4s.Request
+import org.http4s.Response
 
 import scalaz.concurrent.Task
 
@@ -13,17 +14,10 @@ import train.db.MockDatabase
 class LovelaceService(db: DatabaseInterface) {
   import db._
 
-  def asHttpService: HttpService =
-    HttpService {
-      case req @ GET -> Root / "hub" => for {
-        loginState <- getLoggedInState(req)
-        result <- loginState match {
-          case LoggedInStudent(_) => Ok("Hi!")
-          case NotLoggedIn => Ok("Not logged in!")
-        }
-      } yield result
-          case req => Ok("Hello world.")
-    }
+  def asHttpService: HttpService = HttpService {
+    case req @ GET -> Root / "hub" => withLoggedInUser(req, _ => Ok("Hi!"))
+    case req => Ok("Hello world.")
+  }
 
   def getLoggedInState(req: Request): Task[LoginState] = for {
     // TODO: grab the session cookie here, if it exists
@@ -36,7 +30,7 @@ class LovelaceService(db: DatabaseInterface) {
     case false => NotLoggedIn
   }
 
-  def withLoggedInUser[X](req: Request, onSuccess: LoggedInStudent => Task[X]) = for {
+  def withLoggedInUser(req: Request, onSuccess: LoggedInStudent => Task[Response]): Task[Response] = for {
     loginState <- getLoggedInState(req)
     result <- loginState match {
       case s : LoggedInStudent => onSuccess(s)
