@@ -5,18 +5,13 @@ import scalaz.concurrent.Task
 
 import train.data._
 
-trait DatabaseInterface[DB[_]] {
-  type DBQuery[A] <: DB[A]
-  type DBWrite[A] <: DB[A]
-
-  implicit def asTask[A]: DB[A] => Task[A]
-
-  def verifyStudent : (StudentID, String) => DBQuery[Option[LoggedInStudent]]
-  def getProblemsForStudent : StudentID => DBQuery[Seq[Problem]]
-  def getProblemSetsForStudent : StudentID => DBQuery[Seq[ProblemSet]]
-  def getSubmissionCode : (StudentID, ProblemID, Int) => DBQuery[Option[Code]]
-  def getSubmissionResult : (StudentID, ProblemID, Int) => DBQuery[Option[SubmissionResult]]
+trait DatabaseInterface {
+  def verifyStudent : (StudentID, String) => Task[Option[LoggedInStudent]]
+  def getProblemsForStudent : StudentID => Task[Seq[Problem]]
+  def getProblemSetsForStudent : StudentID => Task[Seq[ProblemSet]]
+  def getSubmissionCode : (StudentID, ProblemID, Int) => Task[Option[Code]]
+  def getSubmissionResult : (StudentID, ProblemID, Int) => Task[Option[SubmissionResult]]
 
   // returns submission id
-  def addSubmission: (StudentID, ProblemID, Code) => DBWrite[Int]
+  def addSubmission: (StudentID, ProblemID, Code) => Task[Int]
 }

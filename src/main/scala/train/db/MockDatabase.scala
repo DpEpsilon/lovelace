@@ -9,12 +9,7 @@ import train.data._
  * A trivial read-only database containing no data and failing all operations.
  * Intended for smoke tests on the server.
  */
-object MockDatabase extends DatabaseInterface[Task] {
-  type DBQuery[A] = Task[A]
-  type DBWrite[A] = Task[A]
-
-  implicit def asTask[A] = identity
-
+object MockDatabase extends DatabaseInterface {
   def verifyStudent = (id: StudentID, password: String) => Task.delay(None)
   def getProblemsForStudent = (id: StudentID) => Task.delay(Seq.empty)
   def getProblemSetsForStudent = (id: StudentID) => Task.delay(Seq.empty)
