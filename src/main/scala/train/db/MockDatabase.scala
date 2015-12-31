@@ -9,7 +9,7 @@ import train.data._
  * A trivial read-only database containing no data and failing all operations.
  * Intended for smoke tests on the server.
  */
-class MockDatabase extends DatabaseInterface[Task] {
+object MockDatabase extends DatabaseInterface[Task] {
   type DBQuery[A] = Task[A]
   type DBWrite[A] = Task[A]
 
