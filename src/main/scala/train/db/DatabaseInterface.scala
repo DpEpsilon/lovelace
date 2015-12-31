@@ -11,12 +11,12 @@ trait DatabaseInterface[DB[_]] {
 
   implicit def asTask[A]: DB[A] => Task[A]
 
-  def verifyStudent : StudentID => String => DBQuery[Option[LoggedInStudent]]
+  def verifyStudent : (StudentID, String) => DBQuery[Option[LoggedInStudent]]
   def getProblemsForStudent : StudentID => DBQuery[Seq[Problem]]
   def getProblemSetsForStudent : StudentID => DBQuery[Seq[ProblemSet]]
-  def getSubmissionCode : StudentID => ProblemID => Int => DBQuery[Code]
-  def getSubmissionResult : StudentID => ProblemID => Int => DBQuery[SubmissionResult]
+  def getSubmissionCode : (StudentID, ProblemID, Int) => DBQuery[Code]
+  def getSubmissionResult : (StudentID, ProblemID, Int) => DBQuery[SubmissionResult]
 
   // returns submission id
-  def addSubmission: StudentID => ProblemID => Code => DBWrite[Int]
+  def addSubmission: (StudentID, ProblemID, Code) => DBWrite[Int]
 }
