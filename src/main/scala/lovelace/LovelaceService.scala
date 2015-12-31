@@ -17,7 +17,7 @@ class LovelaceService(db: DatabaseInterface) {
   def asHttpService: HttpService = HttpService {
     case req @ GET -> Root => withLoggedInUser(req, _ => Ok("Hi!"))
     case req @ GET -> Root / "problem" / IntVar(problemId) => Ok("Problem " + problemId)
-    case req @ GET -> Root / "set" / IntVar(setId) => Ok("Problem " + setId)
+    case req @ GET -> Root / "set" / IntVar(setId) => Ok("Set " + setId)
     case req @ POST -> Root / "login" => Ok("You tried to log in.")
     case req => Ok("Hello world.")
   }
