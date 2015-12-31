@@ -22,14 +22,16 @@ class LovelaceService(db: DatabaseInterface) {
           case false => Ok("Not logged in!")
         }
       } yield result
-          case req => Ok("Hello world.")
+      case req => Ok("Hello world.")
     }
   }
 
   def getLoggedInState(req: Request): Task[LoginState] = for {
-    // TODO: grab the session cookie here
+    // TODO: grab the session cookie here, if it exists
+    // Save the verifyStudent call for the login POST method
     studentId <- Task.delay(StudentID(3))
-    isVerified <- verifyStudent(studentId, "foo")
+    password <- Task.delay("foo")
+    isVerified <- verifyStudent(studentId, password)
   } yield isVerified match {
     case true => LoggedInStudent(studentId)
     case false => NotLoggedIn
