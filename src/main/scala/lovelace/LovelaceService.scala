@@ -10,10 +10,10 @@ import train.data._
 import train.db.DatabaseInterface
 import train.db.MockDatabase
 
-object LovelaceService {
-  def apply(db: DatabaseInterface): HttpService = {
-    import db._
+class LovelaceService(db: DatabaseInterface) {
+  import db._
 
+  def asHttpService: HttpService = {
     HttpService {
       case req @ GET -> Root / "hub" => for {
         currentStudent <- verifyStudent(StudentID(3), "foo")
@@ -26,7 +26,14 @@ object LovelaceService {
     }
   }
 
-  def getLoggedInState(req: Request): Task[LoginState] = ??? // TODO: grab the session cookie here
+  def getLoggedInState(req: Request): Task[LoginState] = for {
+    // TODO: grab the session cookie here
+    studentId <- Task.delay(StudentID(3))
+    isVerified <- verifyStudent(studentId, "foo")
+  } yield isVerified match {
+    case true => LoggedInStudent(studentId)
+    case false => NotLoggedIn
+  }
 
   def withLoggedInUser[X](req: Request, onSuccess: LoggedInStudent => Task[X]) = for {
     loginState <- getLoggedInState(req)
@@ -35,4 +42,8 @@ object LovelaceService {
       case NotLoggedIn => Forbidden("Not logged in!")
     }
   } yield result
+}
+
+object LovelaceService {
+  def apply(db: DatabaseInterface): HttpService = new LovelaceService(db).asHttpService
 }
