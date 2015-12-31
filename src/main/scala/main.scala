@@ -5,24 +5,15 @@ import org.slf4j.{Logger,LoggerFactory}
 
 import scalaz.concurrent.Task
 
+import lovelace.LovelaceService
 import train.data._
 import train.db.DatabaseInterface
 import train.db.MockDatabase
 
 object LovelaceTrainingSite extends App {
   implicit val db: DatabaseInterface = MockDatabase
-  import db._
 
-  val service = HttpService {
-    case req @ GET -> Root / "hub" => for {
-      currentStudent <- verifyStudent(StudentID(3), "foo")
-      result <- currentStudent match {
-        case true => Ok("Hi!")
-        case false => Ok("Not logged in!")
-      }
-    } yield result
-    case req => Ok("Hello world.")
-  }
+  val service = LovelaceService(db)
   BlazeBuilder.bindHttp(8080)
     .mountService(service, "/")
     .run
