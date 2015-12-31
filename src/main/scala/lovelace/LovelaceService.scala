@@ -13,18 +13,17 @@ import train.db.MockDatabase
 class LovelaceService(db: DatabaseInterface) {
   import db._
 
-  def asHttpService: HttpService = {
+  def asHttpService: HttpService =
     HttpService {
       case req @ GET -> Root / "hub" => for {
-        currentStudent <- verifyStudent(StudentID(3), "foo")
-        result <- currentStudent match {
-          case true => Ok("Hi!")
-          case false => Ok("Not logged in!")
+        loginState <- getLoggedInState(req)
+        result <- loginState match {
+          case LoggedInStudent(_) => Ok("Hi!")
+          case NotLoggedIn => Ok("Not logged in!")
         }
       } yield result
-      case req => Ok("Hello world.")
+          case req => Ok("Hello world.")
     }
-  }
 
   def getLoggedInState(req: Request): Task[LoginState] = for {
     // TODO: grab the session cookie here, if it exists
