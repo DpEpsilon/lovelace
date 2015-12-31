@@ -6,7 +6,7 @@ import scalaz.concurrent.Task
 import train.data._
 
 trait DatabaseInterface {
-  def verifyStudent : (StudentID, String) => Task[Option[LoggedInStudent]]
+  def verifyStudent : (StudentID, String) => Task[Boolean]
   def getProblemsForStudent : StudentID => Task[Seq[Problem]]
   def getProblemSetsForStudent : StudentID => Task[Seq[ProblemSet]]
   def getSubmissionCode : (StudentID, ProblemID, Int) => Task[Option[Code]]

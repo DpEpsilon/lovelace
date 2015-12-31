@@ -10,7 +10,7 @@ import train.data._
  * Intended for smoke tests on the server.
  */
 object MockDatabase extends DatabaseInterface {
-  def verifyStudent = (id: StudentID, password: String) => Task.delay(None)
+  def verifyStudent = (id: StudentID, password: String) => Task.delay(false)
   def getProblemsForStudent = (id: StudentID) => Task.delay(Seq.empty)
   def getProblemSetsForStudent = (id: StudentID) => Task.delay(Seq.empty)
   def getSubmissionCode = (id: StudentID, problemId: ProblemID, n: Int) => Task.delay(None)

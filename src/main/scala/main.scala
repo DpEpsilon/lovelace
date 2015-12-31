@@ -17,8 +17,8 @@ object LovelaceTrainingSite extends App {
     case req @ GET -> Root / "hub" => for {
       currentStudent <- verifyStudent(StudentID(3), "foo")
       result <- currentStudent match {
-        case Some(_: LoggedInStudent) => Ok("Hi!")
-        case None => Ok("Not logged in!")
+        case true => Ok("Hi!")
+        case false => Ok("Not logged in!")
       }
     } yield result
     case req => Ok("Hello world.")
