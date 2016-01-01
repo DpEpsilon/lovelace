@@ -14,6 +14,8 @@ You will need:
   Java](http://www.java.com/en/download/manual.jsp) or
   [OpenJDK](http://openjdk.java.net/) will work).
 
+### Compiling
+
 To compile, from the root of your project, type:
 
     sbt compile
@@ -27,3 +29,11 @@ This is `sbt` fetching a specific version of itself and the Scala compiler
 (read: reproducible builds). It may look like it's hanging, but actually be
 downloading at the impressive bandwidth of 3Kb/s. This should only need to
 happen once. Grab a coffee; make a Java pun.
+
+### Running
+
+To compile-and-run, type:
+
+    sbt run
+
+By default, this should open an instance on port 8080.
