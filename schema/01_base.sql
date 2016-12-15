@@ -5,11 +5,9 @@
 CREATE TABLE access_sets (
     competitorid integer NOT NULL,
     set character varying(40) NOT NULL,
-    granted timestamp with time zone
+    granted timestamp with time zone,
+    PRIMARY KEY (competitorid, set)
 );
-
-ALTER TABLE ONLY access_sets
-    ADD CONSTRAINT access_sets_pkey PRIMARY KEY (competitorid, set);
 
 CREATE TABLE competitors (
     id SERIAL PRIMARY KEY,
@@ -47,11 +45,9 @@ CREATE TABLE problems (
 CREATE TABLE set_contents (
     set character varying(40) NOT NULL,
     problemid integer NOT NULL,
-    "order" integer
+    "order" integer,
+    PRIMARY KEY (set, problemid)
 );
-
-ALTER TABLE ONLY set_contents
-    ADD CONSTRAINT set_contents_pkey PRIMARY KEY (set, problemid);
 
 CREATE TABLE sets (
     name character varying(40) PRIMARY KEY,
@@ -63,11 +59,9 @@ CREATE TABLE sets (
 CREATE TABLE access_prereqs (
     set character varying(40) NOT NULL,
     requires character varying(40) NOT NULL,
-    percentage integer NOT NULL
+    percentage integer NOT NULL,
+    PRIMARY KEY (set, requires)
 );
-
-ALTER TABLE ONLY access_prereqs
-    ADD CONSTRAINT access_prereqs_pkey PRIMARY KEY (set, requires);
 
 CREATE TABLE fame_problems (
     problemid integer PRIMARY KEY,
@@ -82,11 +76,9 @@ CREATE TABLE languages (
 
 CREATE TABLE notify_prereqs (
     set character varying(40) NOT NULL,
-    requires character varying(40) NOT NULL
+    requires character varying(40) NOT NULL,
+    PRIMARY KEY (set, requires)
 );
-
-ALTER TABLE ONLY notify_prereqs
-    ADD CONSTRAINT notify_prereqs_pkey PRIMARY KEY (set, requires);
 
 CREATE TABLE progress (
     competitorid integer NOT NULL,
@@ -94,11 +86,9 @@ CREATE TABLE progress (
     viewed timestamp with time zone NOT NULL,
     bestscore integer,
     bestscoreon timestamp with time zone,
-    "time" real
+    "time" real,
+    PRIMARY KEY (competitorid, problemid)
 );
-
-ALTER TABLE ONLY progress
-    ADD CONSTRAINT progress_pkey PRIMARY KEY (competitorid, problemid);
 
 CREATE TABLE result_types (
     id character varying(10) PRIMARY KEY,
@@ -112,11 +102,9 @@ CREATE TABLE results (
     attempt integer NOT NULL,
     testcaseid character varying(40) NOT NULL,
     resultid character varying(10) NOT NULL,
-    mark integer NOT NULL
+    mark integer NOT NULL,
+    PRIMARY KEY (competitorid, problemid, attempt, testcaseid)
 );
-
-ALTER TABLE ONLY results
-    ADD CONSTRAINT results_pkey PRIMARY KEY (competitorid, problemid, attempt, testcaseid);
 
 CREATE TABLE status_types (
     id character varying(15) PRIMARY KEY,
@@ -135,20 +123,15 @@ CREATE TABLE submissions (
     ipaddress character varying(50),
     mark integer,
     comment text,
-    judge text
+    judge text,
+    PRIMARY KEY (competitorid, problemid, attempt)
 );
-
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT submissions_pkey PRIMARY KEY (competitorid, problemid, attempt);
 
 CREATE TABLE watchers (
     competitorid integer NOT NULL,
-    email character varying(255) NOT NULL
+    email character varying(255) NOT NULL,
+    PRIMARY KEY (competitorid, email)
 );
-
-ALTER TABLE ONLY watchers
-    ADD CONSTRAINT watchers_pkey PRIMARY KEY (competitorid, email);
-
 
 ALTER TABLE ONLY access_prereqs
     ADD CONSTRAINT access_prereqs_requires FOREIGN KEY (requires) REFERENCES sets(name);
