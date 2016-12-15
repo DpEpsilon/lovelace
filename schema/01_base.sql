@@ -8,8 +8,11 @@ CREATE TABLE access_sets (
     granted timestamp with time zone
 );
 
+ALTER TABLE ONLY access_sets
+    ADD CONSTRAINT access_sets_pkey PRIMARY KEY (competitorid, set);
+
 CREATE TABLE competitors (
-    id integer DEFAULT nextval(('competitors_id_seq'::text)::regclass) NOT NULL,
+    id SERIAL PRIMARY KEY,
     username character varying(15) NOT NULL,
     password character varying(15) NOT NULL,
     firstname character varying(40) NOT NULL,
@@ -35,7 +38,7 @@ CREATE TABLE competitors (
 );
 
 CREATE TABLE problems (
-    id integer DEFAULT nextval(('problems_id_seq'::text)::regclass) NOT NULL,
+    id SERIAL PRIMARY KEY,
     name character varying(40) NOT NULL,
     title character varying(255) NOT NULL,
     files character varying(255)
@@ -47,9 +50,11 @@ CREATE TABLE set_contents (
     "order" integer
 );
 
+ALTER TABLE ONLY set_contents
+    ADD CONSTRAINT set_contents_pkey PRIMARY KEY (set, problemid);
 
 CREATE TABLE sets (
-    name character varying(40) NOT NULL,
+    name character varying(40) PRIMARY KEY,
     title character varying(255) NOT NULL,
     public boolean DEFAULT false,
     priority integer
@@ -61,21 +66,17 @@ CREATE TABLE access_prereqs (
     percentage integer NOT NULL
 );
 
-CREATE SEQUENCE competitors_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    MAXVALUE 2147483647
-    NO MINVALUE
-    CACHE 1;
+ALTER TABLE ONLY access_prereqs
+    ADD CONSTRAINT access_prereqs_pkey PRIMARY KEY (set, requires);
 
 CREATE TABLE fame_problems (
-    problemid integer NOT NULL,
+    problemid integer PRIMARY KEY,
     set character varying(40) NOT NULL,
     type character(1) DEFAULT 't'::bpchar NOT NULL
 );
 
 CREATE TABLE languages (
-    id character varying(10) NOT NULL,
+    id character varying(10) PRIMARY KEY,
     name character varying(40) NOT NULL
 );
 
@@ -84,12 +85,8 @@ CREATE TABLE notify_prereqs (
     requires character varying(40) NOT NULL
 );
 
-CREATE SEQUENCE problems_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    MAXVALUE 2147483647
-    NO MINVALUE
-    CACHE 1;
+ALTER TABLE ONLY notify_prereqs
+    ADD CONSTRAINT notify_prereqs_pkey PRIMARY KEY (set, requires);
 
 CREATE TABLE progress (
     competitorid integer NOT NULL,
@@ -100,8 +97,11 @@ CREATE TABLE progress (
     "time" real
 );
 
+ALTER TABLE ONLY progress
+    ADD CONSTRAINT progress_pkey PRIMARY KEY (competitorid, problemid);
+
 CREATE TABLE result_types (
-    id character varying(10) NOT NULL,
+    id character varying(10) PRIMARY KEY,
     name character varying(255) NOT NULL,
     explanation text
 );
@@ -115,8 +115,11 @@ CREATE TABLE results (
     mark integer NOT NULL
 );
 
+ALTER TABLE ONLY results
+    ADD CONSTRAINT results_pkey PRIMARY KEY (competitorid, problemid, attempt, testcaseid);
+
 CREATE TABLE status_types (
-    id character varying(15) NOT NULL,
+    id character varying(15) PRIMARY KEY,
     name character varying(255) NOT NULL,
     explanation text
 );
@@ -135,55 +138,17 @@ CREATE TABLE submissions (
     judge text
 );
 
+ALTER TABLE ONLY submissions
+    ADD CONSTRAINT submissions_pkey PRIMARY KEY (competitorid, problemid, attempt);
+
 CREATE TABLE watchers (
     competitorid integer NOT NULL,
     email character varying(255) NOT NULL
 );
 
-ALTER TABLE ONLY access_prereqs
-    ADD CONSTRAINT access_prereqs_pkey PRIMARY KEY (set, requires);
-
-ALTER TABLE ONLY access_sets
-    ADD CONSTRAINT access_sets_pkey PRIMARY KEY (competitorid, set);
-
-ALTER TABLE ONLY competitors
-    ADD CONSTRAINT competitors_pkey PRIMARY KEY (id);
-
-ALTER TABLE ONLY fame_problems
-    ADD CONSTRAINT fame_problems_pkey PRIMARY KEY (problemid);
-
-ALTER TABLE ONLY languages
-    ADD CONSTRAINT languages_pkey PRIMARY KEY (id);
-
-ALTER TABLE ONLY notify_prereqs
-    ADD CONSTRAINT notify_prereqs_pkey PRIMARY KEY (set, requires);
-
-ALTER TABLE ONLY problems
-    ADD CONSTRAINT problems_pkey PRIMARY KEY (id);
-
-ALTER TABLE ONLY progress
-    ADD CONSTRAINT progress_pkey PRIMARY KEY (competitorid, problemid);
-
-ALTER TABLE ONLY result_types
-    ADD CONSTRAINT result_types_pkey PRIMARY KEY (id);
-
-ALTER TABLE ONLY results
-    ADD CONSTRAINT results_pkey PRIMARY KEY (competitorid, problemid, attempt, testcaseid);
-
-ALTER TABLE ONLY set_contents
-    ADD CONSTRAINT set_contents_pkey PRIMARY KEY (set, problemid);
-
-ALTER TABLE ONLY sets
-    ADD CONSTRAINT sets_pkey PRIMARY KEY (name);
-
-ALTER TABLE ONLY status_types
-    ADD CONSTRAINT status_types_pkey PRIMARY KEY (id);
-
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT submissions_pkey PRIMARY KEY (competitorid, problemid, attempt);
-
 ALTER TABLE ONLY watchers
     ADD CONSTRAINT watchers_pkey PRIMARY KEY (competitorid, email);
+
 
 ALTER TABLE ONLY access_prereqs
     ADD CONSTRAINT access_prereqs_requires FOREIGN KEY (requires) REFERENCES sets(name);
