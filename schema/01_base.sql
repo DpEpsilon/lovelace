@@ -1,3 +1,14 @@
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS _meta (
+  version INTEGER PRIMARY KEY,
+  ctime   TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Update schema version
+INSERT INTO _meta (version) VALUES (1);
+
+
 CREATE TABLE access_sets (
     competitorid integer NOT NULL REFERENCES competitors(id),
     set character varying(40) NOT NULL REFERENCES sets(name),
@@ -130,3 +141,5 @@ CREATE TABLE watchers (
     email character varying(255) NOT NULL,
     PRIMARY KEY (competitorid, email)
 );
+
+COMMIT;
