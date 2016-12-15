@@ -12,3 +12,10 @@ lazy val root = (project in file("."))
       "org.scalaz" %% "scalaz-concurrent"    % "7.1.2"
     )
   )
+
+lazy val gen = (project in file("doobie-codegen"))
+  .settings(
+    scalaVersion := "2.11.7",
+    resolvers += "Jitpack" at "https://jitpack.io",
+    libraryDependencies += "com.github.mdmoss" %% "doobie-codegen" % "v0.1.5"
+  )
