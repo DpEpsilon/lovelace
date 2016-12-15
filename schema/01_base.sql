@@ -1,10 +1,6 @@
--- Original PostgreSQL version: 8.4.22
-
--- TODO: Put constraints and sequences into the table definitions
-
 CREATE TABLE access_sets (
-    competitorid integer NOT NULL,
-    set character varying(40) NOT NULL,
+    competitorid integer NOT NULL REFERENCES competitors(id),
+    set character varying(40) NOT NULL REFERENCES sets(name),
     granted timestamp with time zone,
     PRIMARY KEY (competitorid, set)
 );
@@ -15,7 +11,7 @@ CREATE TABLE competitors (
     password character varying(15) NOT NULL,
     firstname character varying(40) NOT NULL,
     lastname character varying(40) NOT NULL,
-    defaultlang character varying(10),
+    defaultlang character varying(10) REFERENCES languages(id),
     email character varying(255) NOT NULL,
     school character varying(255) NOT NULL,
     year character varying(10) NOT NULL,
@@ -43,8 +39,8 @@ CREATE TABLE problems (
 );
 
 CREATE TABLE set_contents (
-    set character varying(40) NOT NULL,
-    problemid integer NOT NULL,
+    set character varying(40) NOT NULL REFERENCES sets(name),
+    problemid integer NOT NULL REFERENCES problems(id),
     "order" integer,
     PRIMARY KEY (set, problemid)
 );
@@ -57,15 +53,15 @@ CREATE TABLE sets (
 );
 
 CREATE TABLE access_prereqs (
-    set character varying(40) NOT NULL,
-    requires character varying(40) NOT NULL,
+    set character varying(40) NOT NULL REFERENCES sets(name),
+    requires character varying(40) NOT NULL REFERENCES sets(name),
     percentage integer NOT NULL,
     PRIMARY KEY (set, requires)
 );
 
 CREATE TABLE fame_problems (
-    problemid integer PRIMARY KEY,
-    set character varying(40) NOT NULL,
+    problemid integer PRIMARY KEY REFERENCES problems(id),
+    set character varying(40) NOT NULL REFERENCES sets(name),
     type character(1) DEFAULT 't'::bpchar NOT NULL
 );
 
@@ -75,14 +71,14 @@ CREATE TABLE languages (
 );
 
 CREATE TABLE notify_prereqs (
-    set character varying(40) NOT NULL,
-    requires character varying(40) NOT NULL,
+    set character varying(40) NOT NULL REFERENCES sets(name),
+    requires character varying(40) NOT NULL REFERENCES sets(name),
     PRIMARY KEY (set, requires)
 );
 
 CREATE TABLE progress (
-    competitorid integer NOT NULL,
-    problemid integer NOT NULL,
+    competitorid integer NOT NULL REFERENCES competitors(id),
+    problemid integer NOT NULL REFERENCES problems(id),
     viewed timestamp with time zone NOT NULL,
     bestscore integer,
     bestscoreon timestamp with time zone,
@@ -101,9 +97,11 @@ CREATE TABLE results (
     problemid integer NOT NULL,
     attempt integer NOT NULL,
     testcaseid character varying(40) NOT NULL,
-    resultid character varying(10) NOT NULL,
+    resultid character varying(10) NOT NULL REFERENCES result_types(id),
     mark integer NOT NULL,
-    PRIMARY KEY (competitorid, problemid, attempt, testcaseid)
+    PRIMARY KEY (competitorid, problemid, attempt, testcaseid),
+    CONSTRAINT results_attempt FOREIGN KEY (competitorid, problemid, attempt)
+        REFERENCES submissions(competitorid, problemid, attempt),
 );
 
 CREATE TABLE status_types (
@@ -113,11 +111,11 @@ CREATE TABLE status_types (
 );
 
 CREATE TABLE submissions (
-    competitorid integer NOT NULL,
-    problemid integer NOT NULL,
+    competitorid integer NOT NULL REFERENCES competitors(id),
+    problemid integer NOT NULL REFERENCES problems(id),
     attempt integer NOT NULL,
-    languageid character varying(10) NOT NULL,
-    statusid character varying(15),
+    languageid character varying(10) NOT NULL REFERENCES languages(id),
+    statusid character varying(15) REFERENCES status_types(id),
     submitted_file text NOT NULL,
     "timestamp" timestamp with time zone NOT NULL,
     ipaddress character varying(50),
@@ -128,67 +126,7 @@ CREATE TABLE submissions (
 );
 
 CREATE TABLE watchers (
-    competitorid integer NOT NULL,
+    competitorid integer NOT NULL REFERENCES competitors(id),
     email character varying(255) NOT NULL,
     PRIMARY KEY (competitorid, email)
 );
-
-ALTER TABLE ONLY access_prereqs
-    ADD CONSTRAINT access_prereqs_requires FOREIGN KEY (requires) REFERENCES sets(name);
-
-ALTER TABLE ONLY access_prereqs
-    ADD CONSTRAINT access_prereqs_set FOREIGN KEY (set) REFERENCES sets(name);
-
-ALTER TABLE ONLY access_sets
-    ADD CONSTRAINT access_sets_competitorid FOREIGN KEY (competitorid) REFERENCES competitors(id);
-
-ALTER TABLE ONLY access_sets
-    ADD CONSTRAINT access_sets_set FOREIGN KEY (set) REFERENCES sets(name);
-
-ALTER TABLE ONLY competitors
-    ADD CONSTRAINT competitors_defaultlang FOREIGN KEY (defaultlang) REFERENCES languages(id);
-
-ALTER TABLE ONLY fame_problems
-    ADD CONSTRAINT fame_problems_problemid FOREIGN KEY (problemid) REFERENCES problems(id);
-
-ALTER TABLE ONLY fame_problems
-    ADD CONSTRAINT fame_problems_set FOREIGN KEY (set) REFERENCES sets(name);
-
-ALTER TABLE ONLY notify_prereqs
-    ADD CONSTRAINT notify_prereqs_requires FOREIGN KEY (requires) REFERENCES sets(name);
-
-ALTER TABLE ONLY notify_prereqs
-    ADD CONSTRAINT notify_prereqs_set FOREIGN KEY (set) REFERENCES sets(name);
-
-ALTER TABLE ONLY progress
-    ADD CONSTRAINT progress_competitorid FOREIGN KEY (competitorid) REFERENCES competitors(id);
-
-ALTER TABLE ONLY progress
-    ADD CONSTRAINT progress_problemid FOREIGN KEY (problemid) REFERENCES problems(id);
-
-ALTER TABLE ONLY results
-    ADD CONSTRAINT results_attempt FOREIGN KEY (competitorid, problemid, attempt) REFERENCES submissions(competitorid, problemid, attempt);
-
-ALTER TABLE ONLY results
-    ADD CONSTRAINT results_resultid FOREIGN KEY (resultid) REFERENCES result_types(id);
-
-ALTER TABLE ONLY set_contents
-    ADD CONSTRAINT set_contents_problemid FOREIGN KEY (problemid) REFERENCES problems(id);
-
-ALTER TABLE ONLY set_contents
-    ADD CONSTRAINT set_contents_set FOREIGN KEY (set) REFERENCES sets(name);
-
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT submissions_competitorid FOREIGN KEY (competitorid) REFERENCES competitors(id);
-
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT submissions_languageid FOREIGN KEY (languageid) REFERENCES languages(id);
-
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT submissions_problemid FOREIGN KEY (problemid) REFERENCES problems(id);
-
-ALTER TABLE ONLY submissions
-    ADD CONSTRAINT submissions_statusid FOREIGN KEY (statusid) REFERENCES status_types(id);
-
-ALTER TABLE ONLY watchers
-    ADD CONSTRAINT watchers_competitorid FOREIGN KEY (competitorid) REFERENCES competitors(id);
