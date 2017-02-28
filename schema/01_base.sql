@@ -10,7 +10,7 @@ INSERT INTO _meta (version) VALUES (1);
 
 
 CREATE TABLE access_sets (
-    competitor INTEGER NOT NULL REFERENCES competitors(id),
+    competitor BIGINT NOT NULL REFERENCES competitors(id),
     set        TEXT NOT NULL REFERENCES sets(name),
     granted    TIMESTAMP WITH TIME ZONE,
     PRIMARY KEY (competitor, set)
@@ -51,7 +51,7 @@ CREATE TABLE problems (
 
 CREATE TABLE set_contents (
     set      TEXT NOT NULL REFERENCES sets(name),
-    problem  INTEGER NOT NULL REFERENCES problems(id),
+    problem  BIGINT NOT NULL REFERENCES problems(id),
     priority INTEGER,
     PRIMARY KEY (set, problem)
 );
@@ -71,7 +71,7 @@ CREATE TABLE access_prereqs (
 );
 
 CREATE TABLE fame_problems (
-    problem INTEGER PRIMARY KEY REFERENCES problems(id),
+    problem BIGINT PRIMARY KEY REFERENCES problems(id),
     set     TEXT NOT NULL REFERENCES sets(name),
     type    TEXT DEFAULT 't' NOT NULL
 );
@@ -99,12 +99,12 @@ CREATE TABLE notify_prereqs (
 );
 
 CREATE TABLE progress (
-    competitor    INTEGER NOT NULL REFERENCES competitors(id),
-    problem       INTEGER NOT NULL REFERENCES problems(id),
+    competitor    BIGINT NOT NULL REFERENCES competitors(id),
+    problem       BIGINT NOT NULL REFERENCES problems(id),
     viewed        TIMESTAMP WITH TIME ZONE NOT NULL,
     best_score    INTEGER,
     best_score_at TIMESTAMP WITH TIME ZONE,
-    time_taken   INTEGER, -- milliseconds
+    time_taken    BIGINT, -- milliseconds
     PRIMARY KEY (competitor, problem)
 );
 
@@ -125,9 +125,9 @@ INSERT INTO result_types VALUES ('unsafe',     'Unsafe program',    'The program
 INSERT INTO result_types VALUES ('blockingio', 'Blocking I/O',      'The program would have blocked on I/O (e.g., reading from standard input when I/O files should be used).');
 
 CREATE TABLE results (
-    competitor INTEGER NOT NULL,
-    problem    INTEGER NOT NULL,
-    attempt    INTEGER NOT NULL,
+    competitor BIGINT NOT NULL,
+    problem    BIGINT NOT NULL,
+    attempt    BIGINT NOT NULL,
     test_case  TEXT NOT NULL,
     result     TEXT NOT NULL REFERENCES result_types(id),
     mark       INTEGER NOT NULL,
@@ -152,9 +152,9 @@ INSERT INTO status_types VALUES ('nojavamain',  'Java: Missing/Incorrect ''main'
 INSERT INTO status_types VALUES ('noiofiles',   'Missing I/O Filenames',                    'The input and/or output filenames for this problem appear to be missing from the source file.  Since all input in the problem must come from the input file(s) and all output must go to the output file(s), this will almost certainly cause the submission to score zero.  Please note that filenames are case sensitive.');
 
 CREATE TABLE submissions (
-    competitor     INTEGER NOT NULL REFERENCES competitors(id),
-    problem        INTEGER NOT NULL REFERENCES problems(id),
-    attempt        INTEGER NOT NULL,
+    competitor     BIGINT NOT NULL REFERENCES competitors(id),
+    problem        BIGINT NOT NULL REFERENCES problems(id),
+    attempt        BIGINT NOT NULL,
     language       TEXT NOT NULL REFERENCES languages(id),
     status         TEXT REFERENCES status_types(id),
     submitted_file TEXT NOT NULL,
@@ -167,7 +167,7 @@ CREATE TABLE submissions (
 );
 
 CREATE TABLE watchers (
-    competitor INTEGER NOT NULL REFERENCES competitors(id),
+    competitor BIGINT NOT NULL REFERENCES competitors(id),
     email      TEXT NOT NULL,
     PRIMARY KEY (competitor, email)
 );
