@@ -81,6 +81,17 @@ CREATE TABLE languages (
     name TEXT NOT NULL
 );
 
+--                           id      name
+INSERT INTO languages VALUES('cpp',  'C++');
+INSERT INTO languages VALUES('pas',  'Pascal');
+INSERT INTO languages VALUES('caml', 'Caml');
+INSERT INTO languages VALUES('c',    'C');
+INSERT INTO languages VALUES('hs',   'Haskell');
+INSERT INTO languages VALUES('zip',  'Zip archive');
+INSERT INTO languages VALUES('py',   'Python');
+INSERT INTO languages VALUES('php',  'PHP');
+INSERT INTO languages VALUES('java', 'Java');
+
 CREATE TABLE notify_prereqs (
     set         TEXT NOT NULL REFERENCES sets(name),
     requirement TEXT NOT NULL REFERENCES sets(name),
@@ -103,6 +114,16 @@ CREATE TABLE result_types (
     explanation TEXT
 );
 
+--                               id            name                 explanation
+INSERT INTO result_types VALUES ('ok',         'Ok',                'The program produced an output file which was evaluated');
+INSERT INTO result_types VALUES ('timeout',    'Timeout',           'The program exceeded the time limit allocated for that problem.');
+INSERT INTO result_types VALUES ('noout',      'No output file',    'The program did not produce an output file.');
+INSERT INTO result_types VALUES ('emptyout',   'Empty output file', 'The program produced an empty output file.');
+INSERT INTO result_types VALUES ('crash',      'Crashed',           'The program crashed, and whatever output it did manage to produce scored zero.');
+INSERT INTO result_types VALUES ('outofmem',   'Out of memory',     'The program exceeded the memory limit allocated for that problem.');
+INSERT INTO result_types VALUES ('unsafe',     'Unsafe program',    'The program executed an unsafe or malicious function call.');
+INSERT INTO result_types VALUES ('blockingio', 'Blocking I/O',      'The program would have blocked on I/O (e.g., reading from standard input when I/O files should be used).');
+
 CREATE TABLE results (
     competitor INTEGER NOT NULL,
     problem    INTEGER NOT NULL,
@@ -120,6 +141,15 @@ CREATE TABLE status_types (
     name        TEXT NOT NULL,
     explanation TEXT
 );
+
+--                               id             name                                        explanation
+INSERT INTO status_types VALUES ('ok',          'Submission OK',                            'Submission OK');
+INSERT INTO status_types VALUES ('iopath',      'Uses I/O Path',                            'Submissions should not use path names when accessing I/O files.  Instead they should simply read from and write to files in the current directory.  For instance, if the output file is named ''test.out'' then you should simply open ''test.out'', not ''c:\test.out'' or ''../test.out''.');
+INSERT INTO status_types VALUES ('apppath',     'VB: Uses App.Path',                        'The App.Path variable is used in this submission.  Since you should not be using path names when accessing I/O files, this will almost certainly cause the submission to score zero.');
+INSERT INTO status_types VALUES ('nosubmain',   'VB: Missing Sub ''main''',                 'All Visual Basic submissions must be run from the routine ''sub main''.  Forms or other graphical user interface components must not be used.');
+INSERT INTO status_types VALUES ('nosolnclass', 'Java: No ''Solution'' Class',              'All Java submissions must be contained in a single class called ''Solution''.');
+INSERT INTO status_types VALUES ('nojavamain',  'Java: Missing/Incorrect ''main'' Routine', 'All Java submissions must be run from the routine ''public static void main(String[] args)'' within the class ''Solution''.');
+INSERT INTO status_types VALUES ('noiofiles',   'Missing I/O Filenames',                    'The input and/or output filenames for this problem appear to be missing from the source file.  Since all input in the problem must come from the input file(s) and all output must go to the output file(s), this will almost certainly cause the submission to score zero.  Please note that filenames are case sensitive.');
 
 CREATE TABLE submissions (
     competitor     INTEGER NOT NULL REFERENCES competitors(id),
