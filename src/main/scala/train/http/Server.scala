@@ -2,6 +2,7 @@ package train.http
 
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.server.middleware.{CORS, CORSConfig}
+import train.ServerEnv
 
 import scalaz.concurrent.Task
 
@@ -17,8 +18,8 @@ object Server {
     Some(Set("Authorization", "Content-Type", "Accept", "Cache-Control", "X-Requested-With"))
   )
 
-  def apply(): Task[org.http4s.server.Server] =
-    BlazeBuilder.bindHttp(8080, "0.0.0.0")
-      .mountService(CORS(Routes.apply(), corsConfig))
+  def apply(env: ServerEnv): Task[org.http4s.server.Server] =
+    BlazeBuilder.bindHttp(env.port, "0.0.0.0")
+      .mountService(CORS(Routes(env), corsConfig))
       .start
 }

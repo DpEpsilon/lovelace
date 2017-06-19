@@ -13,7 +13,8 @@ val commonSettings = Seq(
     "org.tpolecat" %% "doobie-core"                % "0.2.3",
     "org.tpolecat" %% "doobie-contrib-postgresql"  % "0.2.3",
     "org.tpolecat" %% "doobie-contrib-specs2"      % "0.2.3",
-    "org.tpolecat" %% "doobie-contrib-hikari"      % "0.2.3"
+    "org.tpolecat" %% "doobie-contrib-hikari"      % "0.2.3",
+    "com.typesafe" %  "config"                     % "1.3.0"
   )
 )
 
