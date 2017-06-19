@@ -1,6 +1,7 @@
 package train
 
 import org.log4s.getLogger
+import util.CommandLineInteraction.waitForInput
 
 import scalaz.concurrent.Task
 
@@ -16,7 +17,11 @@ object Server {
 
     server <- http.Server.apply()
 
-    _ <- Task.delay { server.awaitShutdown() }
+    input <- waitForInput
+    _     <- input match {
+      case Some(_) => server.shutdown
+      case None    => Task.delay { server.awaitShutdown() }
+    }
 
     _ <- Task.delay { log.info("lovelace server stopped")}
 
