@@ -17,6 +17,9 @@ val commonSettings = Seq(
 
 lazy val root = (project in file(""))
   .settings(commonSettings:_*)
+  .settings(
+    mainClass in Compile := Some("train.Server")
+  )
   .dependsOn(db)
 
 lazy val gen = (project in file("doobie-codegen"))
