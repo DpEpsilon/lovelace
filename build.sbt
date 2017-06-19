@@ -6,6 +6,8 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.http4s"   %% "http4s-dsl"                 % "0.11.2",
     "org.http4s"   %% "http4s-blaze-server"        % "0.11.2",
+    "org.log4s"    %% "log4s"                      % "1.3.4",
+    "org.slf4j"    %  "slf4j-simple"               % "1.7.21",
     "org.scalaz"   %% "scalaz-core"                % "7.1.2",
     "org.scalaz"   %% "scalaz-concurrent"          % "7.1.2",
     "org.tpolecat" %% "doobie-core"                % "0.2.3",
